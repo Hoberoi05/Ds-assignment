@@ -1,0 +1,53 @@
+     #assignment9-q1(c)
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Edge {
+    int u, v, w;
+};
+
+int parent[100];
+int find(int x) {
+    if (parent[x] == x) return x;
+    return parent[x] = find(parent[x]);
+}
+void unionSet(int a, int b) {
+    a = find(a);
+    b = find(b);
+    parent[b] = a;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    Edge edges[1000];
+
+    for (int i = 0; i < m; i++) {
+        cin >> edges[i].u >> edges[i].v >> edges[i].w;
+    }
+
+    sort(edges, edges + m, [](Edge a, Edge b) {
+        return a.w < b.w;
+    });
+    for (int i = 0; i < n; i++) parent[i] = i;
+
+    int total = 0;
+    cout << "Minimal spannind tree:\n";
+
+    for (int i = 0; i < m; i++) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+
+        if (find(u) != find(v)) {
+            cout << u << " -- " << v << " = " << edges[i].w << "\n";
+            total += edges[i].w;
+            unionSet(u, v);
+        }
+    }
+
+    cout << "Total Weight = " << total << endl;
+
+    return 0;
+}
